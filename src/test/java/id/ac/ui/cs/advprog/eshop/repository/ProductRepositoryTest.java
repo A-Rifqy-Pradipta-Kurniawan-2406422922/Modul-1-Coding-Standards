@@ -111,4 +111,37 @@ class ProductRepositoryTest {
         Product foundProduct = productRepository.findById(UUID.randomUUID());
         assertNull(foundProduct);
     }
+
+    @Test
+    void testUpdateOnNonExistentProduct() {
+        Product product1 = new Product();
+        product1.setProductName("Original Product");
+        product1.setProductQuantity(100);
+        productRepository.create(product1);
+
+        Product updatedInfo = new Product();
+        updatedInfo.setProductName("Updated Product");
+        updatedInfo.setProductQuantity(50);
+
+        productRepository.update(UUID.randomUUID(), updatedInfo);
+
+        Product foundProduct = productRepository.findById(product1.getProductId());
+        assertEquals("Original Product", foundProduct.getProductName());
+        assertEquals(100, foundProduct.getProductQuantity());
+    }
+
+    @Test
+    void testDeleteOnNonExistentProduct() {
+        Product product1 = new Product();
+        product1.setProductName("Original Product");
+        product1.setProductQuantity(100);
+        productRepository.create(product1);
+
+        productRepository.delete(UUID.randomUUID());
+
+        Iterator<Product> productIterator = productRepository.findAll();
+        assertTrue(productIterator.hasNext());
+        productIterator.next();
+        assertFalse(productIterator.hasNext());
+    }
 }
