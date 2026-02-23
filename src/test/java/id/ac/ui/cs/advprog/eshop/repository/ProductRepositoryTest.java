@@ -113,6 +113,24 @@ class ProductRepositoryTest {
     }
 
     @Test
+    void testFindByIdSkipsNonMatchingProductBeforeMatch() {
+        Product firstProduct = new Product();
+        firstProduct.setProductName("First");
+        firstProduct.setProductQuantity(1);
+        productRepository.create(firstProduct);
+
+        Product secondProduct = new Product();
+        secondProduct.setProductName("Second");
+        secondProduct.setProductQuantity(2);
+        productRepository.create(secondProduct);
+
+        Product foundProduct = productRepository.findById(secondProduct.getProductId());
+
+        assertNotNull(foundProduct);
+        assertEquals(secondProduct.getProductId(), foundProduct.getProductId());
+    }
+
+    @Test
     void testUpdateOnNonExistentProduct() {
         Product product1 = new Product();
         product1.setProductName("Original Product");
