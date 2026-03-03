@@ -1,7 +1,8 @@
 package id.ac.ui.cs.advprog.eshop.service;
 
 import id.ac.ui.cs.advprog.eshop.model.Product;
-import id.ac.ui.cs.advprog.eshop.repository.ProductRepository;
+import id.ac.ui.cs.advprog.eshop.repository.ProductRepositoryRead;
+import id.ac.ui.cs.advprog.eshop.repository.ProductRepositoryWrite;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -26,7 +27,10 @@ class ProductServiceImplTest {
     ProductServiceImpl productService;
 
     @Mock
-    ProductRepository productRepository;
+    ProductRepositoryRead productRepositoryRead;
+
+    @Mock
+    ProductRepositoryWrite productRepositoryWrite;
 
     @BeforeEach
     void setUp() {
@@ -41,7 +45,7 @@ class ProductServiceImplTest {
 
         productService.update(product.getProductId(), product);
 
-        verify(productRepository, times(1)).update(product.getProductId(), product);
+        verify(productRepositoryWrite, times(1)).update(product.getProductId(), product);
     }
 
     @Test
@@ -50,7 +54,7 @@ class ProductServiceImplTest {
 
         productService.delete(productId);
 
-        verify(productRepository, times(1)).delete(productId);
+        verify(productRepositoryWrite, times(1)).delete(productId);
     }
 
     @Test
@@ -59,7 +63,7 @@ class ProductServiceImplTest {
 
         Product result = productService.create(product);
 
-        verify(productRepository, times(1)).create(product);
+        verify(productRepositoryWrite, times(1)).create(product);
         assertEquals(product, result);
     }
 
@@ -69,11 +73,11 @@ class ProductServiceImplTest {
         Product product2 = new Product();
         Iterator<Product> iterator = Arrays.asList(product1, product2).iterator();
 
-        when(productRepository.findAll()).thenReturn(iterator);
+        when(productRepositoryRead.findAll()).thenReturn(iterator);
 
         List<Product> result = productService.findAll();
 
-        verify(productRepository, times(1)).findAll();
+        verify(productRepositoryRead, times(1)).findAll();
         assertEquals(2, result.size());
         assertEquals(product1, result.get(0));
         assertEquals(product2, result.get(1));
@@ -83,11 +87,11 @@ class ProductServiceImplTest {
     void testFindByIdProduct() {
         UUID productId = UUID.randomUUID();
         Product product = new Product();
-        when(productRepository.findById(productId)).thenReturn(product);
+        when(productRepositoryRead.findById(productId)).thenReturn(product);
 
         Product result = productService.findById(productId);
 
-        verify(productRepository, times(1)).findById(productId);
+        verify(productRepositoryRead, times(1)).findById(productId);
         assertEquals(product, result);
     }
 }
