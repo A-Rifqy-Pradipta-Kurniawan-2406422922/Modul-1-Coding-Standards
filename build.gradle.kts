@@ -74,11 +74,16 @@ tasks.test {
 
 tasks.jacocoTestReport {
     dependsOn(tasks.test)
+    reports {
+        xml.required = true
+        html.required = true
+    }
 }
 
 sonarqube {
     properties {
         property("sonar.organization", "a-rifqy-pradipta-kurniawan-2406422922")
         property("sonar.projectKey", "A-Rifqy-Pradipta-Kurniawan-2406422922_Modul-1-Coding-Standards")
+        property("sonar.coverage.jacoco.xmlReportPaths", "build/reports/jacoco/test/jacocoTestReport.xml")
     }
 }
